@@ -1,14 +1,24 @@
 import React from "react"
-import TodoForm from "./components/TodoForm"
-import TodoList from "./components/TodoList"
-import TodosProvider from "./contexts/TodosProvider"
+import { AuthProvider } from "./contexts/AuthContext"
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
+import TodosPage from "./components/TodosPage"
+import SignUp from "./components/SignUp"
+import SignIn from "./components/SignIn"
+import PrivateRoute from "./components/PrivateRoute"
+import ResetPassword from "./components/ResetPassword"
 
-function App() {
+function App(): JSX.Element {
   return (
-    <TodosProvider>
-      <TodoForm />
-      <TodoList />
-    </TodosProvider>
+    <Router>
+      <AuthProvider>
+        <Switch>
+          <PrivateRoute path="/" component={TodosPage} exact />
+          <Route path="/resetpassword" component={ResetPassword} />
+          <Route path="/signup" component={SignUp} />
+          <Route path="/signin" component={SignIn} />
+        </Switch>
+      </AuthProvider>
+    </Router>
   )
 }
 
