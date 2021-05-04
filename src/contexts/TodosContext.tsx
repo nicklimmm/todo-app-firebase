@@ -8,7 +8,7 @@ export enum PrioritiesEnum {
   High,
 }
 
-export type Todo = {
+export type TodoType = {
   id: number
   description: string
   notes: string
@@ -19,14 +19,14 @@ export type Todo = {
 }
 
 export type TodosContextType = {
-  todos: Todo[]
-  setTodos: (todos: Todo[]) => void
+  todos: TodoType[]
+  setTodos: (todos: TodoType[]) => void
   toggleTodoDone: (id: number) => void
   removeTodo: (id: number) => void
 }
 
 export const TodosContext = createContext<TodosContextType>({
-  todos: [] as Todo[],
+  todos: [] as TodoType[],
   setTodos: (todos) => console.warn("No Todos Provider"),
   toggleTodoDone: (id) => console.warn("No Todos Provider"),
   removeTodo: (id) => console.warn("No Todos Provider"),
@@ -37,23 +37,25 @@ export const useTodos = () => {
 }
 
 const TodosProvider: React.FC = ({ children }) => {
-  const [todos, setTodos] = useState([] as Todo[])
+  const [todos, setTodos] = useState([] as TodoType[])
   const toggleTodoDone = (id: number): void => {
     setTodos(
-      todos.map((todo: Todo) => {
-        if (todo.id === id) {
-          return {
-            ...todo,
-            isDone: true,
+      todos.map(
+        (todo: TodoType): TodoType => {
+          if (todo.id === id) {
+            return {
+              ...todo,
+              isDone: true,
+            }
           }
+          return todo
         }
-        return todo
-      })
+      )
     )
   }
 
   const removeTodo = (id: number): void => {
-    setTodos(todos.filter((todo) => todo.id !== id))
+    setTodos(todos.filter((todo: TodoType): boolean => todo.id !== id))
   }
   return (
     <TodosContext.Provider
