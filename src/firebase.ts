@@ -1,19 +1,10 @@
 import firebase from "firebase/app"
 import "firebase/auth"
 import "firebase/database"
-
-export type Config = {
-  apiKey: string | undefined
-  authDomain: string | undefined
-  projectId: string | undefined
-  storageBucket: string | undefined
-  messagingSenderId: string | undefined
-  appId: string | undefined
-  databaseURL: string | undefined
-}
+import { FirebaseConfigType } from "./types"
 
 // Your web app's Firebase configuration
-const firebaseConfig: Config = {
+const firebaseConfig: FirebaseConfigType = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
