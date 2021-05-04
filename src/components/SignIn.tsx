@@ -97,8 +97,11 @@ const SignIn: React.FC = (): JSX.Element => {
           )}
         </Card.Body>
       </Card>
-      <div className="text-center my-3">
+      <div className="text-center mt-3">
         Not yet signed up? <Link to="/signup">Sign Up</Link>
+      </div>
+      <div className="text-center mt-1">
+        Forgot password? <Link to="/resetpassword">Reset Password</Link>
       </div>
     </Container>
   )

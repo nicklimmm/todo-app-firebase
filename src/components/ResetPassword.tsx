@@ -10,7 +10,7 @@ const SignInSchema = Yup.object().shape({
 })
 
 const ResetPassword: React.FC = (): JSX.Element => {
-  const { resetPassword, currentUser } = useAuth()
+  const { resetPassword } = useAuth()
   const {
     values,
     handleChange,
@@ -29,13 +29,6 @@ const ResetPassword: React.FC = (): JSX.Element => {
     validateOnBlur: false,
     onSubmit: async (values) => {
       setStatus({ emailSent: false, errorMessage: "" })
-      if (currentUser && values.email !== currentUser.email) {
-        setStatus({
-          ...status,
-          errorMessage: "The email does not match with the signed in email.",
-        })
-        return
-      }
       try {
         await resetPassword(values.email)
         setStatus({ ...status, signInSuccess: true })
