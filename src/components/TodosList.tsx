@@ -1,5 +1,5 @@
 import React from "react"
-import { useTodos, Todo, PrioritiesEnum } from "../contexts/TodosProvider"
+import { useTodos, TodoType, PrioritiesEnum } from "../contexts/TodosContext"
 import { Accordion, Button, Card, Container } from "react-bootstrap"
 
 const priorityColor = (priority: PrioritiesEnum): string => {
@@ -15,15 +15,16 @@ const priorityColor = (priority: PrioritiesEnum): string => {
   }
 }
 
-const TodoList = () => {
+const TodosList = () => {
   const { todos, toggleTodoDone, removeTodo } = useTodos()
+
   return (
     <Container fluid="sm" className="px-4">
       <Accordion>
         {todos
-          .filter((todo: Todo): boolean => !todo.isDone)
+          .filter((todo: TodoType): boolean => !todo.isDone)
           .map(
-            (todo: Todo): JSX.Element => {
+            (todo: TodoType): JSX.Element => {
               return (
                 <Card
                   key={todo.id.toString()}
@@ -73,4 +74,4 @@ const TodoList = () => {
   )
 }
 
-export default TodoList
+export default TodosList
