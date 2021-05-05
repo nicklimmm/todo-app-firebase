@@ -1,9 +1,9 @@
 import React from "react"
 import { useFormik } from "formik"
-import { useTodos, Todo, PrioritiesEnum } from "../contexts/TodosProvider"
+import { useTodos, TodoType, PrioritiesEnum } from "../contexts/TodosContext"
 import { Form, Button, Container } from "react-bootstrap"
 
-const copyValues = (values: Todo): Todo => {
+const copyValues = (values: TodoType): TodoType => {
   return {
     id: values.id,
     description: values.description,
@@ -19,9 +19,9 @@ const validateEndDate = (endDate: string): boolean => {
   return new Date(endDate) > new Date() || endDate === ""
 }
 
-const TodoForm: React.FC = () => {
+const TodoForm: React.FC = (): JSX.Element => {
   const { todos, setTodos } = useTodos()
-  const formik = useFormik<Todo>({
+  const { handleSubmit, handleChange, values } = useFormik<TodoType>({
     initialValues: {
       id: 0,
       description: "",
@@ -31,7 +31,7 @@ const TodoForm: React.FC = () => {
       isDone: false,
       priority: PrioritiesEnum.None,
     },
-    onSubmit: (values: Todo, { resetForm }) => {
+    onSubmit: (values: TodoType, { resetForm }) => {
       if (!validateEndDate(values.endDate)) {
         alert("Invalid End Date")
         return
@@ -56,15 +56,15 @@ const TodoForm: React.FC = () => {
       fluid="sm"
       className="my-4 p-4 border border-5 border-primary rounded"
     >
-      <Form onSubmit={formik.handleSubmit} className="row">
+      <Form onSubmit={handleSubmit} className="row">
         <Form.Group controlId="description" className="col-12">
           <Form.Label>Description</Form.Label>
           <Form.Control
             type="text"
             name="description"
             placeholder="What's your next plan?"
-            onChange={formik.handleChange}
-            value={formik.values.description}
+            onChange={handleChange}
+            value={values.description}
             required
           />
         </Form.Group>
@@ -74,8 +74,8 @@ const TodoForm: React.FC = () => {
             as="textarea"
             name="notes"
             placeholder="Anything important to remember?"
-            onChange={formik.handleChange}
-            value={formik.values.notes}
+            onChange={handleChange}
+            value={values.notes}
           />
         </Form.Group>
         <Form.Group controlId="endDate" className="col-6">
@@ -84,13 +84,10 @@ const TodoForm: React.FC = () => {
             type="datetime-local"
             name="endDate"
             placeholder="End Date"
-            onChange={formik.handleChange}
-            value={formik.values.endDate}
-            isValid={
-              formik.values.endDate !== "" &&
-              validateEndDate(formik.values.endDate)
-            }
-            isInvalid={!validateEndDate(formik.values.endDate)}
+            onChange={handleChange}
+            value={values.endDate}
+            isValid={values.endDate !== "" && validateEndDate(values.endDate)}
+            isInvalid={!validateEndDate(values.endDate)}
           />
         </Form.Group>
         <Form.Group controlId="priority" className="col-6">
@@ -99,8 +96,8 @@ const TodoForm: React.FC = () => {
             as="select"
             name="priority"
             placeholder="None"
-            onChange={formik.handleChange}
-            value={formik.values.priority}
+            onChange={handleChange}
+            value={values.priority}
           >
             <option value={PrioritiesEnum.None}>None</option>
             <option value={PrioritiesEnum.Low}>Low</option>
