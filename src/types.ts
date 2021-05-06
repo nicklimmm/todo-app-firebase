@@ -20,8 +20,6 @@ export type TodoType = {
 export type TodosContextType = {
   todos: TodoType[]
   setTodos: (todos: TodoType[]) => void
-  toggleTodoDone: (id: string) => void
-  removeTodo: (id: string) => void
 }
 
 export type FirebaseConfigType = {
