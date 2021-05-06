@@ -1,6 +1,10 @@
-import React from "react"
-import { useTodos, TodoType, PrioritiesEnum } from "../contexts/TodosContext"
+import React, { useEffect } from "react"
+import { useTodos } from "../contexts/TodosContext"
+import { TodoType, PrioritiesEnum } from "../types"
 import { Accordion, Button, Card, Container } from "react-bootstrap"
+import { useAuth } from "../contexts/AuthContext"
+import { db } from "../firebase"
+import { useDatabase } from "../hooks/Database"
 
 const priorityColor = (priority: PrioritiesEnum): string => {
   switch (+priority) {
@@ -16,7 +20,24 @@ const priorityColor = (priority: PrioritiesEnum): string => {
 }
 
 const TodosList = () => {
-  const { todos, toggleTodoDone, removeTodo } = useTodos()
+  const { todos, setTodos } = useTodos()
+  const { toggleDoneTodo, deleteTodo } = useDatabase()
+  const { currentUser } = useAuth()
+
+  // Always listen for any updates
+  useEffect(() => {
+    const todosRef = db.ref(`users/${currentUser!.uid}/todos`)
+    const listener = todosRef.on("value", (snapshot) => {
+      const fetchedTodos = [] as TodoType[]
+      snapshot.forEach((child) => {
+        fetchedTodos.push(child.val())
+      })
+      setTodos(fetchedTodos)
+    })
+    return () => todosRef.off("value", listener)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <Container fluid="sm" className="px-4">
@@ -27,7 +48,7 @@ const TodosList = () => {
             (todo: TodoType): JSX.Element => {
               return (
                 <Card
-                  key={todo.id.toString()}
+                  key={todo.id}
                   border={priorityColor(todo.priority)}
                   className="my-1"
                 >
@@ -38,7 +59,7 @@ const TodosList = () => {
                     <Accordion.Toggle
                       as={Button}
                       variant="link"
-                      eventKey={todo.id.toString()}
+                      eventKey={todo.id}
                       className="mx-1"
                     >
                       <i className="bi bi-caret-down-fill"></i>
@@ -47,7 +68,7 @@ const TodosList = () => {
                       variant="success"
                       className="mx-1"
                       onClick={() => {
-                        toggleTodoDone(todo.id)
+                        toggleDoneTodo(todo.id)
                       }}
                     >
                       <i className="bi bi-check-circle"></i>
@@ -56,13 +77,13 @@ const TodosList = () => {
                       variant="danger"
                       className="mx-1"
                       onClick={() => {
-                        removeTodo(todo.id)
+                        deleteTodo(todo.id)
                       }}
                     >
                       <i className="bi bi-trash-fill"></i>
                     </Button>
                   </Card.Header>
-                  <Accordion.Collapse eventKey={todo.id.toString()}>
+                  <Accordion.Collapse eventKey={todo.id}>
                     <Card.Body>{todo.notes}</Card.Body>
                   </Accordion.Collapse>
                 </Card>

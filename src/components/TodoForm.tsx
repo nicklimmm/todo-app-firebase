@@ -1,29 +1,18 @@
 import React from "react"
 import { useFormik } from "formik"
-import { useTodos, TodoType, PrioritiesEnum } from "../contexts/TodosContext"
+import { TodoType, PrioritiesEnum } from "../types"
 import { Form, Button, Container } from "react-bootstrap"
-
-const copyValues = (values: TodoType): TodoType => {
-  return {
-    id: values.id,
-    description: values.description,
-    notes: values.notes,
-    startDate: values.startDate,
-    endDate: values.endDate,
-    isDone: values.isDone,
-    priority: values.priority,
-  }
-}
+import { useDatabase } from "../hooks/Database"
 
 const validateEndDate = (endDate: string): boolean => {
   return new Date(endDate) > new Date() || endDate === ""
 }
 
 const TodoForm: React.FC = (): JSX.Element => {
-  const { todos, setTodos } = useTodos()
+  const { pushTodo } = useDatabase()
   const { handleSubmit, handleChange, values } = useFormik<TodoType>({
     initialValues: {
-      id: 0,
+      id: "",
       description: "",
       notes: "",
       startDate: "",
@@ -37,16 +26,8 @@ const TodoForm: React.FC = (): JSX.Element => {
         return
       }
 
-      values.id = todos.length
-      values.startDate = new Date().toISOString()
-
-      // Update endDate if entered
-      if (values.endDate !== "")
-        values.endDate = new Date(values.endDate).toISOString()
-
-      setTodos([...todos, copyValues(values)])
-      console.log(todos)
-
+      // Push todo to firebase
+      pushTodo(values)
       resetForm()
     },
   })

@@ -1,32 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react"
 import firebase from "firebase"
 import { auth } from "../firebase"
-
-export type User = firebase.User | null
-
-export type EmailAuthType = {
-  email: string
-  password?: string
-  confirmPassword?: string
-}
-
-export type AuthContextType = {
-  currentUser: User
-  signUp: (
-    email: string,
-    password: string
-  ) => Promise<firebase.auth.UserCredential> | void
-  signIn: (
-    email: string,
-    password: string
-  ) => Promise<firebase.auth.UserCredential> | void
-  signOut: () => Promise<void> | void
-  resetPassword: (email: string) => Promise<void> | void
-}
-
-export type Errors = {
-  passwordsMismatch?: string
-}
+import { User, AuthContextType } from "../types"
 
 const AuthContext = createContext<AuthContextType>({
   currentUser: null,

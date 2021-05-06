@@ -1,9 +1,10 @@
 import React from "react"
-import { useAuth, EmailAuthType } from "../contexts/AuthContext"
+import { useAuth } from "../contexts/AuthContext"
+import { EmailAuthType } from "../types"
 import { useFormik } from "formik"
 import { Form, Button, Container, Card, Alert } from "react-bootstrap"
-import * as Yup from "yup"
 import { Link, useHistory } from "react-router-dom"
+import * as Yup from "yup"
 
 const SignInSchema = Yup.object().shape({
   email: Yup.string().email().required("Email is required"),
