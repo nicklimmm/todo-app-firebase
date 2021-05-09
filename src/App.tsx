@@ -6,11 +6,13 @@ import SignUp from "./components/SignUp"
 import SignIn from "./components/SignIn"
 import PrivateRoute from "./components/PrivateRoute"
 import ResetPassword from "./components/ResetPassword"
+import AppBar from "./components/AppBar"
 
 function App(): JSX.Element {
   return (
     <Router>
       <AuthProvider>
+        <AppBar />
         <Switch>
           <PrivateRoute path="/" component={TodosPage} exact />
           <Route path="/resetpassword" component={ResetPassword} />

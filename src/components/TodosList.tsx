@@ -5,6 +5,7 @@ import { Accordion, Button, Card, Container } from "react-bootstrap"
 import { useAuth } from "../contexts/AuthContext"
 import { db } from "../firebase"
 import { useDatabase } from "../hooks/Database"
+import firebase from "firebase"
 
 const priorityColor = (priority: PrioritiesEnum): string => {
   switch (+priority) {
@@ -19,14 +20,16 @@ const priorityColor = (priority: PrioritiesEnum): string => {
   }
 }
 
-const TodosList = () => {
+const TodosList: React.FC = (): JSX.Element => {
   const { todos, setTodos } = useTodos()
   const { toggleDoneTodo, deleteTodo } = useDatabase()
   const { currentUser } = useAuth()
 
   // Always listen for any updates
   useEffect(() => {
-    const todosRef = db.ref(`users/${currentUser!.uid}/todos`)
+    const todosRef: firebase.database.Reference = db.ref(
+      `users/${currentUser!.uid}/todos`
+    )
     const listener = todosRef.on("value", (snapshot) => {
       const fetchedTodos = [] as TodoType[]
       snapshot.forEach((child) => {
@@ -56,14 +59,21 @@ const TodosList = () => {
                     <div className="flex-grow-1 align-self-center">
                       {todo.description}
                     </div>
-                    <Accordion.Toggle
-                      as={Button}
-                      variant="link"
-                      eventKey={todo.id}
-                      className="mx-1"
-                    >
-                      <i className="bi bi-caret-down-fill"></i>
-                    </Accordion.Toggle>
+                    {todo.notes !== "" && (
+                      <Accordion.Toggle
+                        as={Button}
+                        variant="link"
+                        eventKey={todo.id}
+                        className="mx-1"
+                      >
+                        <i className="bi bi-caret-down-fill"></i>
+                      </Accordion.Toggle>
+                    )}
+                    {todo.endDate !== "" && (
+                      <div className="align-self-center mx-1">
+                        {todo.endDate}
+                      </div>
+                    )}
                     <Button
                       variant="success"
                       className="mx-1"
