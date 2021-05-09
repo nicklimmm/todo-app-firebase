@@ -2,6 +2,7 @@ import { db } from "../firebase"
 import { useAuth } from "../contexts/AuthContext"
 import { TodoType } from "../types"
 import firebase from "firebase"
+import moment from "moment"
 
 export type DatabaseType = {
   todosCountRef: firebase.database.Reference
@@ -21,7 +22,6 @@ export const useDatabase = (): DatabaseType => {
   )
 
   const pushTodo = (todo: TodoType): void => {
-    // todosRef.push(todo)
     const pushedTodoRef = db.ref(`users/${currentUser!.uid}/todos`).push()
 
     if (pushedTodoRef.key == null) {
@@ -30,12 +30,16 @@ export const useDatabase = (): DatabaseType => {
     }
 
     todo.id = pushedTodoRef.key
-    todo.startDate = new Date().toISOString()
+
+    // Clean whitespaces
+    todo.description = todo.description.trim()
+    todo.notes = todo.notes.trim()
 
     // Update endDate if entered
-    if (todo.endDate !== "") todo.endDate = new Date(todo.endDate).toISOString()
+    if (todo.endDate !== "")
+      todo.endDate = moment(todo.endDate).format("DD/MM/YYYY")
 
-    pushedTodoRef.set(todo)
+    pushedTodoRef.setWithPriority(todo, todo.priority)
   }
 
   const toggleDoneTodo = (id: string): void => {
