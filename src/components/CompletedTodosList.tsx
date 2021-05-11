@@ -20,7 +20,7 @@ const priorityColor = (priority: PrioritiesEnum): string => {
   }
 }
 
-const TodosList: React.FC = (): JSX.Element => {
+const CompletedTodosList: React.FC = (): JSX.Element => {
   const { todos, setTodos } = useTodos()
   const { toggleDoneTodo, deleteTodo } = useDatabase()
   const { currentUser } = useAuth()
@@ -43,11 +43,11 @@ const TodosList: React.FC = (): JSX.Element => {
   }, [])
 
   return (
-    <Container fluid="sm" className="px-4 mb-4">
-      <h3 className="text-center">Todos List</h3>
+    <Container fluid="sm" className="px-4 mt-2 border-top border-primary">
+      <h3 className="text-center mt-4">Completed Todos</h3>
       <Accordion>
         {todos
-          .filter((todo: TodoType): boolean => !todo.isDone)
+          .filter((todo: TodoType): boolean => todo.isDone)
           .map(
             (todo: TodoType): JSX.Element => {
               return (
@@ -57,7 +57,10 @@ const TodosList: React.FC = (): JSX.Element => {
                   className="my-1"
                 >
                   <Card.Header className="d-flex">
-                    <div className="flex-grow-1 align-self-center">
+                    <div
+                      className="align-self-center flex-grow-1"
+                      style={{ textDecoration: "line-through" }}
+                    >
                       {todo.description}
                     </div>
                     {todo.notes !== "" && (
@@ -76,13 +79,13 @@ const TodosList: React.FC = (): JSX.Element => {
                       </div>
                     )}
                     <Button
-                      variant="success"
+                      variant="warning"
                       className="mx-1"
                       onClick={() => {
                         toggleDoneTodo(todo.id)
                       }}
                     >
-                      <i className="bi bi-check-circle"></i>
+                      <i className="bi bi-x-circle"></i>
                     </Button>
                     <Button
                       variant="danger"
@@ -106,4 +109,4 @@ const TodosList: React.FC = (): JSX.Element => {
   )
 }
 
-export default TodosList
+export default CompletedTodosList
