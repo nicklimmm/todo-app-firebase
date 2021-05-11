@@ -66,7 +66,7 @@ const TodoForm: React.FC = (): JSX.Element => {
             value={values.notes}
           />
         </Form.Group>
-        <Form.Group controlId="endDate" className="col-6">
+        <Form.Group controlId="endDate" className="col-sm-6">
           <Form.Label>End Date</Form.Label>
           <Form.Control
             type="date"
@@ -78,7 +78,7 @@ const TodoForm: React.FC = (): JSX.Element => {
             isInvalid={!validateEndDate(values.endDate)}
           />
         </Form.Group>
-        <Form.Group controlId="priority" className="col-6">
+        <Form.Group controlId="priority" className="col-sm-6">
           <Form.Label>Priority</Form.Label>
           <Form.Control
             as="select"
