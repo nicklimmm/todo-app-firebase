@@ -35,6 +35,7 @@ const TodosList: React.FC = (): JSX.Element => {
       snapshot.forEach((child) => {
         fetchedTodos.push(child.val())
       })
+      fetchedTodos.sort((todo1, todo2) => todo2.priority - todo1.priority)
       setTodos(fetchedTodos)
     })
     return () => todosRef.off("value", listener)
@@ -48,59 +49,55 @@ const TodosList: React.FC = (): JSX.Element => {
       <Accordion>
         {todos
           .filter((todo: TodoType): boolean => !todo.isDone)
-          .map(
-            (todo: TodoType): JSX.Element => {
-              return (
-                <Card
-                  key={todo.id}
-                  border={priorityColor(todo.priority)}
-                  className="my-1"
-                >
-                  <Card.Header className="d-flex">
-                    <div className="flex-grow-1 align-self-center">
-                      {todo.description}
-                    </div>
-                    {todo.notes !== "" && (
-                      <Accordion.Toggle
-                        as={Button}
-                        variant="link"
-                        eventKey={todo.id}
-                        className="mx-1"
-                      >
-                        <i className="bi bi-caret-down-fill"></i>
-                      </Accordion.Toggle>
-                    )}
-                    {todo.endDate !== "" && (
-                      <div className="align-self-center mx-1">
-                        {todo.endDate}
-                      </div>
-                    )}
-                    <Button
-                      variant="success"
+          .map((todo: TodoType): JSX.Element => {
+            return (
+              <Card
+                key={todo.id}
+                border={priorityColor(todo.priority)}
+                className="my-1"
+              >
+                <Card.Header className="d-flex">
+                  <div className="flex-grow-1 align-self-center">
+                    {todo.description}
+                  </div>
+                  {todo.notes !== "" && (
+                    <Accordion.Toggle
+                      as={Button}
+                      variant="link"
+                      eventKey={todo.id}
                       className="mx-1"
-                      onClick={() => {
-                        toggleDoneTodo(todo.id)
-                      }}
                     >
-                      <i className="bi bi-check-circle"></i>
-                    </Button>
-                    <Button
-                      variant="danger"
-                      className="mx-1"
-                      onClick={() => {
-                        deleteTodo(todo.id)
-                      }}
-                    >
-                      <i className="bi bi-trash-fill"></i>
-                    </Button>
-                  </Card.Header>
-                  <Accordion.Collapse eventKey={todo.id}>
-                    <Card.Body>{todo.notes}</Card.Body>
-                  </Accordion.Collapse>
-                </Card>
-              )
-            }
-          )}
+                      <i className="bi bi-caret-down-fill"></i>
+                    </Accordion.Toggle>
+                  )}
+                  {todo.endDate !== "" && (
+                    <div className="align-self-center mx-1">{todo.endDate}</div>
+                  )}
+                  <Button
+                    variant="success"
+                    className="mx-1"
+                    onClick={() => {
+                      toggleDoneTodo(todo.id)
+                    }}
+                  >
+                    <i className="bi bi-check-circle"></i>
+                  </Button>
+                  <Button
+                    variant="danger"
+                    className="mx-1"
+                    onClick={() => {
+                      deleteTodo(todo.id)
+                    }}
+                  >
+                    <i className="bi bi-trash-fill"></i>
+                  </Button>
+                </Card.Header>
+                <Accordion.Collapse eventKey={todo.id}>
+                  <Card.Body>{todo.notes}</Card.Body>
+                </Accordion.Collapse>
+              </Card>
+            )
+          })}
       </Accordion>
     </Container>
   )
