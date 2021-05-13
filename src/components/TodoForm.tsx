@@ -3,17 +3,10 @@ import { useFormik } from "formik"
 import { TodoType, PrioritiesEnum } from "../types"
 import { Form, Button, Container } from "react-bootstrap"
 import { useDatabase } from "../hooks/Database"
-import moment from "moment"
+import { dateIsSameOrAfterToday, todaysDate } from "../helpers/Date"
 
 const validateEndDate = (endDate: string): boolean => {
-  let todaysDate = moment().set({ ms: 0, s: 0, m: 0, h: 0 })
-  let submittedDate = moment(endDate, "YYYY-MM-DD").set({
-    ms: 0,
-    s: 0,
-    m: 0,
-    h: 0,
-  })
-  return endDate === "" || submittedDate.isSameOrAfter(todaysDate)
+  return endDate === "" || dateIsSameOrAfterToday(endDate)
 }
 
 const TodoForm: React.FC = (): JSX.Element => {
@@ -29,7 +22,9 @@ const TodoForm: React.FC = (): JSX.Element => {
     },
     onSubmit: (values: TodoType, { resetForm }) => {
       if (!validateEndDate(values.endDate)) {
-        alert("End Date cannot be in the past")
+        alert(
+          `End date must be from ${todaysDate().format("DD/MM/YYYY")} onwards.`
+        )
         return
       }
 
