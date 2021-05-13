@@ -61,14 +61,15 @@ const TodosList: React.FC = (): JSX.Element => {
                   <div className="flex-grow-1 align-self-center">
                     {todo.description}
                   </div>
-                  {!dateIsSameOrAfterToday(todo.endDate) && (
-                    <div
-                      className="align-self-center mx-1"
-                      style={{ color: "#DC3D45" }}
-                    >
-                      Overdue
-                    </div>
-                  )}
+                  {!dateIsSameOrAfterToday(todo.endDate) &&
+                    todo.endDate !== "" && (
+                      <div
+                        className="align-self-center mx-1"
+                        style={{ color: "#DC3D45" }}
+                      >
+                        Overdue
+                      </div>
+                    )}
                   {todo.notes !== "" && (
                     <Accordion.Toggle
                       as={Button}
