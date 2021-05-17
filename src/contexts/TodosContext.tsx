@@ -1,5 +1,4 @@
-import React, { createContext, useContext } from "react"
-import { useState } from "react"
+import React, { createContext, useContext, useState } from "react"
 import { TodoType, TodosContextType } from "../types"
 
 export const TodosContext = createContext<TodosContextType>({
@@ -16,8 +15,8 @@ const TodosProvider: React.FC = ({ children }) => {
   return (
     <TodosContext.Provider
       value={{
-        todos: todos,
-        setTodos: setTodos,
+        todos,
+        setTodos,
       }}
     >
       {children}

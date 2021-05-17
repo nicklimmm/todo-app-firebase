@@ -7,20 +7,6 @@ export enum PrioritiesEnum {
   High,
 }
 
-export type TodoType = {
-  id: string
-  description: string
-  notes: string
-  endDate: string
-  isDone: boolean
-  priority: PrioritiesEnum
-}
-
-export type TodosContextType = {
-  todos: TodoType[]
-  setTodos: (todos: TodoType[]) => void
-}
-
 export type FirebaseConfigType = {
   apiKey: string | undefined
   authDomain: string | undefined
@@ -37,6 +23,20 @@ export type EmailAuthType = {
   email: string
   password?: string
   confirmPassword?: string
+}
+
+export type TodoType = {
+  id: string
+  description: string
+  notes: string
+  endDate: string
+  isDone: boolean
+  priority: PrioritiesEnum
+}
+
+export type TodosContextType = {
+  todos: TodoType[]
+  setTodos: (todos: TodoType[]) => void
 }
 
 export type AuthContextType = {

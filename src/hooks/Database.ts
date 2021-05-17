@@ -5,7 +5,6 @@ import firebase from "firebase"
 import moment from "moment"
 
 export type DatabaseType = {
-  todosCountRef: firebase.database.Reference
   todosRef: firebase.database.Reference
   pushTodo: (todo: TodoType) => void
   toggleDoneTodo: (id: string) => void
@@ -14,9 +13,6 @@ export type DatabaseType = {
 
 export const useDatabase = (): DatabaseType => {
   const { currentUser } = useAuth()
-  const todosCountRef: firebase.database.Reference = db.ref(
-    `users/${currentUser!.uid}/todosCount`
-  )
   const todosRef: firebase.database.Reference = db.ref(
     `users/${currentUser!.uid}/todos`
   )
@@ -51,7 +47,6 @@ export const useDatabase = (): DatabaseType => {
   }
 
   return {
-    todosCountRef,
     todosRef,
     pushTodo,
     deleteTodo,

@@ -43,7 +43,7 @@ const SignIn: React.FC = (): JSX.Element => {
     },
   })
   return (
-    <Container className="d-flex flex-column flex-grow-1 my-4 p-4">
+    <Container className="my-4 p-4">
       <Card>
         <Card.Header as="h2" className="text-center">
           Sign In
