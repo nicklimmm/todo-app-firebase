@@ -1,7 +1,7 @@
 import React from "react"
 import { useFormik } from "formik"
 import { TodoType, PrioritiesEnum } from "../types"
-import { Form, Button, Container } from "react-bootstrap"
+import { Form, Button, Container, Spinner } from "react-bootstrap"
 import { useDatabase } from "../hooks/Database"
 import { dateIsSameOrAfterToday, todaysDate } from "../helpers/Date"
 
@@ -11,28 +11,30 @@ const validateEndDate = (endDate: string): boolean => {
 
 const TodoForm: React.FC = (): JSX.Element => {
   const { pushTodo } = useDatabase()
-  const { handleSubmit, handleChange, values } = useFormik<TodoType>({
-    initialValues: {
-      id: "",
-      description: "",
-      notes: "",
-      endDate: "",
-      isDone: false,
-      priority: PrioritiesEnum.None,
-    },
-    onSubmit: (values: TodoType, { resetForm }) => {
-      if (!validateEndDate(values.endDate)) {
-        alert(
-          `End date must be from ${todaysDate().format("DD/MM/YYYY")} onwards.`
-        )
-        return
-      }
-
-      // Push todo to firebase
-      pushTodo(values)
-      resetForm()
-    },
-  })
+  const { handleSubmit, handleChange, values, isSubmitting } =
+    useFormik<TodoType>({
+      initialValues: {
+        id: "",
+        description: "",
+        notes: "",
+        endDate: "",
+        isDone: false,
+        priority: PrioritiesEnum.None,
+      },
+      onSubmit: (values: TodoType, { resetForm }) => {
+        if (!validateEndDate(values.endDate)) {
+          alert(
+            `End date must be from ${todaysDate().format(
+              "DD/MM/YYYY"
+            )} onwards.`
+          )
+          return
+        }
+        // Push todo to firebase, if valid
+        pushTodo(values)
+        resetForm()
+      },
+    })
 
   return (
     <Container
@@ -88,8 +90,16 @@ const TodoForm: React.FC = (): JSX.Element => {
             <option value={PrioritiesEnum.High}>High</option>
           </Form.Control>
         </Form.Group>
-        <Button variant="primary" type="submit" className="col mx-3">
-          Create Todo!
+        <Button
+          variant="primary"
+          type="submit"
+          className="col mx-3"
+          disabled={isSubmitting}
+        >
+          {isSubmitting && (
+            <Spinner as="span" animation="border" size="sm" role="status" />
+          )}
+          {isSubmitting ? "Creating..." : "Create Todo!"}
         </Button>
       </Form>
     </Container>
