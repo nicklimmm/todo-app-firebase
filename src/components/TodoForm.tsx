@@ -4,6 +4,7 @@ import { TodoType, PrioritiesEnum } from "../types"
 import { Form, Button, Container, Spinner } from "react-bootstrap"
 import { useDatabase } from "../hooks/Database"
 import { dateIsSameOrAfterToday, todaysDate } from "../helpers/Date"
+import { checkOnlineStatus } from "../helpers/Connection"
 
 const validateEndDate = (endDate: string): boolean => {
   return endDate === "" || dateIsSameOrAfterToday(endDate)
@@ -21,18 +22,26 @@ const TodoForm: React.FC = (): JSX.Element => {
         isDone: false,
         priority: PrioritiesEnum.None,
       },
-      onSubmit: (values: TodoType, { resetForm }) => {
-        if (!validateEndDate(values.endDate)) {
-          alert(
-            `End date must be from ${todaysDate().format(
-              "DD/MM/YYYY"
-            )} onwards.`
-          )
-          return
-        }
-        // Push todo to firebase, if valid
-        pushTodo(values)
-        resetForm()
+      onSubmit: (values: TodoType, { resetForm, setSubmitting }) => {
+        checkOnlineStatus().then((isOnline) => {
+          if (isOnline) {
+            if (!validateEndDate(values.endDate)) {
+              alert(
+                `End date must be from ${todaysDate().format(
+                  "DD/MM/YYYY"
+                )} onwards.`
+              )
+              return
+            }
+            // Push todo to firebase, if valid
+            pushTodo(values)
+            resetForm()
+          } else {
+            // Disconnected from the internet
+            alert("Failed to create todo. Please check your connection.")
+            setSubmitting(false)
+          }
+        })
       },
     })
 
