@@ -6,6 +6,8 @@ This Todo App serves as a project for me to learn new technologies such as
 - Firebase
 - Formik
 - React Bootstrap and Bootstrap
+- Moment
+- React Router Dom
 
 It includes features such as
 
