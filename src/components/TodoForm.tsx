@@ -3,12 +3,8 @@ import { useFormik } from "formik"
 import { TodoType, PrioritiesEnum } from "../types"
 import { Form, Button, Container, Spinner } from "react-bootstrap"
 import { useDatabase } from "../hooks/Database"
-import { dateIsSameOrAfterToday, todaysDate } from "../helpers/Date"
+import { validateEndDate, getTodaysDate } from "../helpers/Date"
 import { checkOnlineStatus } from "../helpers/Connection"
-
-const validateEndDate = (endDate: string): boolean => {
-  return endDate === "" || dateIsSameOrAfterToday(endDate)
-}
 
 const TodoForm: React.FC = (): JSX.Element => {
   const { pushTodo } = useDatabase()
@@ -27,7 +23,7 @@ const TodoForm: React.FC = (): JSX.Element => {
           if (isOnline) {
             if (!validateEndDate(values.endDate)) {
               alert(
-                `End date must be from ${todaysDate().format(
+                `End date must be from ${getTodaysDate().format(
                   "DD/MM/YYYY"
                 )} onwards.`
               )
