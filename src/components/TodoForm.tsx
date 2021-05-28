@@ -8,38 +8,42 @@ import { checkOnlineStatus } from "../helpers/Connection"
 
 const TodoForm: React.FC = (): JSX.Element => {
   const { pushTodo } = useDatabase()
-  const { handleSubmit, handleChange, values, isSubmitting } =
-    useFormik<TodoType>({
-      initialValues: {
-        id: "",
-        description: "",
-        notes: "",
-        endDate: "",
-        isDone: false,
-        priority: PrioritiesEnum.None,
-      },
-      onSubmit: (values: TodoType, { resetForm, setSubmitting }) => {
-        checkOnlineStatus().then((isOnline) => {
-          if (isOnline) {
-            if (!validateEndDate(values.endDate)) {
-              alert(
-                `End date must be from ${getTodaysDate().format(
-                  "DD/MM/YYYY"
-                )} onwards.`
-              )
-              return
-            }
-            // Push todo to firebase, if valid
-            pushTodo(values)
-            resetForm()
-          } else {
-            // Disconnected from the internet
-            alert("Failed to create todo. Please check your connection.")
-            setSubmitting(false)
-          }
-        })
-      },
-    })
+  const {
+    handleSubmit,
+    handleChange,
+    values,
+    isSubmitting,
+    resetForm,
+    setSubmitting,
+  } = useFormik<TodoType>({
+    initialValues: {
+      id: "",
+      description: "",
+      notes: "",
+      endDate: "",
+      isDone: false,
+      priority: PrioritiesEnum.None,
+    },
+    onSubmit: async () => {
+      try {
+        await checkOnlineStatus()
+        if (!validateEndDate(values.endDate)) {
+          alert(
+            `End date must be from ${getTodaysDate().format(
+              "DD/MM/YYYY"
+            )} onwards.`
+          )
+          return
+        }
+        pushTodo(values)
+        resetForm()
+      } catch (err) {
+        alert("Failed to create todo. Please check your connection")
+        console.error(err)
+        setSubmitting(false)
+      }
+    },
+  })
 
   return (
     <Container
