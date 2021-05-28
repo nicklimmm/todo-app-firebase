@@ -74,7 +74,7 @@ const EditTodoModal: React.FC<EditTodoModalProps> = ({
               value={values.notes}
             />
           </Form.Group>
-          <Form.Group controlId="endDate" className="col-sm-6 pr-1">
+          <Form.Group controlId="endDate" className="col-sm-6 pr-sm-1">
             <Form.Label>End Date</Form.Label>
             <Form.Control
               type="date"
@@ -86,7 +86,7 @@ const EditTodoModal: React.FC<EditTodoModalProps> = ({
               isInvalid={!validateEndDate(values.endDate)}
             />
           </Form.Group>
-          <Form.Group controlId="priority" className="col-sm-6 pl-1">
+          <Form.Group controlId="priority" className="col-sm-6 pl-sm-1">
             <Form.Label>Priority</Form.Label>
             <Form.Control
               as="select"
