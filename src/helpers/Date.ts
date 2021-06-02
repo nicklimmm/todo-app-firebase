@@ -20,5 +20,6 @@ export const validateEndDate = (endDate: string): boolean => {
 }
 
 export const convertDateToHTMLFormat = (date: string): string => {
+  if (date === "") return ""
   return `${date.substr(6, 4)}-${date.substr(3, 2)}-${date.substr(0, 2)}`
 }

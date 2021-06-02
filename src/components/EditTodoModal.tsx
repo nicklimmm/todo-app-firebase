@@ -3,7 +3,7 @@ import { Form, Button, Modal, Spinner } from "react-bootstrap"
 import { useFormik } from "formik"
 import { db } from "../firebase"
 import { PrioritiesEnum, TodoType } from "../types"
-import { validateEndDate, convertDateToHTMLFormat } from "../helpers/Date"
+import { convertDateToHTMLFormat, validateEndDate } from "../helpers/Date"
 import { useAuth } from "../contexts/AuthContext"
 
 export type EditTodoModalProps = {
@@ -24,7 +24,7 @@ const EditTodoModal: React.FC<EditTodoModalProps> = ({
         id: todo.id,
         description: todo.description,
         notes: todo.notes,
-        endDate: todo.endDate,
+        endDate: convertDateToHTMLFormat(todo.endDate),
         isDone: todo.isDone,
         priority: todo.priority,
       },
@@ -81,7 +81,7 @@ const EditTodoModal: React.FC<EditTodoModalProps> = ({
               name="endDate"
               placeholder="End Date"
               onChange={handleChange}
-              value={convertDateToHTMLFormat(values.endDate)}
+              value={values.endDate}
               isValid={values.endDate !== "" && validateEndDate(values.endDate)}
               isInvalid={!validateEndDate(values.endDate)}
             />
